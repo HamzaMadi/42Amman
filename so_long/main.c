@@ -6,11 +6,40 @@
 /*   By: hmadi <hmadi@student.42amman.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 20:16:37 by hmadi             #+#    #+#             */
-/*   Updated: 2025/02/19 20:16:38 by hmadi            ###   ########.fr       */
+/*   Updated: 2025/02/19 20:56:05 by hmadi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+int	ft_strncmp(const char *str1, const char *str2, size_t num)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < num)
+	{
+		if (str1[i] == '\0' && str2[i] == '\0')
+			return (0);
+		if (str1[i] != str2[i])
+			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+		i++;
+	}
+	return (0);
+}
+
+int	is_valid_extension(const char *filename)
+{
+	int	len;
+
+	len = ft_strlen(filename);
+	if (len < 4 || ft_strncmp(filename + len - 4, ".ber", 4) != 0)
+	{
+		ft_printf("Error: Invalid file extension. Use a .ber file\n");
+		return(0);
+	}
+	return (1);
+}
 
 int	close_window(t_game *game)
 {
@@ -49,9 +78,11 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		ft_printf("Usage: ./so_long map.ber\n");
+		ft_printf("Error: include map file");
 		return (1);
 	}
+	if (!is_valid_extension(argv[1]))
+		return (1);
 	game.map = parse_map(argv[1], &game);
 	player_postion(&game);
 	check_valid_path(game.map, game.rows, (game.cols - 1), &game);
